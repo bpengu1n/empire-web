@@ -8,6 +8,7 @@ if (strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) != 'xmlhttprequest') {
 
 // input validation should go here
 $agent_id = $_REQUEST['agent_id'];
+$listener_id = $_REQUEST['listener_id'];
 
 switch($_REQUEST['type']) {
 	// Teamserver Actions
@@ -24,6 +25,23 @@ switch($_REQUEST['type']) {
 		$res = execute_shell_cmd_agent($sess_ip, $sess_port, $sess_token, $agent_id, $cmd);
 
 		echo (($res['success'] == TRUE) ? $res['task_id'].": Tasked agent $agent_id to run command '$cmd'" : "Could not task agent $agent_id to run command '$cmd'");
+		break;
+	case 'listener_rm':
+		$res = kill_listener($sess_ip, $sess_port, $sess_token, $listener_id);
+
+		echo (($res['success'] == TRUE) ? "Stopped listener ".$listener_id : "Could not stop listener ".$listener_id);
+		break;
+	case 'file_download':
+		$path = $_REQUEST['path'];
+		$res = agent_file_download($sess_ip, $sess_port, $sess_token, $agent_id, $path);
+
+		echo (($res['success'] == TRUE) ? "Sent command to download file ".$path : "Could not download file ".$path);
+		break;
+	case 'file_upload':
+		$path = $_REQUEST['path'];
+		$res = agent_file_upload($sess_ip, $sess_port, $sess_token, $agent_id, $path);
+		
+		echo (($res['success'] == TRUE) ? "Sent command to upload file ".$path : "Could not upload file ".$path);
 		break;
 	default:
 		echo "Unrecognized/unimplemented API command";

@@ -112,6 +112,20 @@ function get_all_listeners($empire_ip, $empire_port, $empire_session_token)
     return $arr_result;
 }
 
+function get_loaded_listeners($empire_ip, $empire_port, $empire_session_token)
+{
+    $ch = curl_init("https://$empire_ip:$empire_port/api/listeners/all?token=$empire_session_token");
+    curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "GET");
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json','Except:'));
+    curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+    $result = curl_exec($ch);
+    curl_close($ch);
+    $arr_result = json_decode($result,true);
+    return $arr_result;
+}
+
 function search_listener_name($empire_ip, $empire_port, $empire_session_token, $search_term)
 {
     $ch = curl_init("https://$empire_ip:$empire_port/api/listeners/$search_term?token=$empire_session_token");
@@ -291,6 +305,39 @@ function execute_shell_cmd_agent($empire_ip, $empire_port, $empire_session_token
     $data = array("command" => $agent_cmd);
     $data_string = json_encode($data);
     $ch = curl_init("https://$empire_ip:$empire_port/api/agents/$agent_name/shell?token=$empire_session_token");
+    curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+    curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json','Content-Length: ' . strlen($data_string),'Except:'));
+    curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+    $result = curl_exec($ch);
+    curl_close($ch);
+    $arr_result = json_decode($result, true);
+    return $arr_result;
+}
+
+function agent_file_download($empire_ip, $empire_port, $empire_session_token, $agent_name, $path)
+{
+    $data = array("path" => $path);
+    $data_string = json_encode($data);
+    $ch = curl_init("https://$empire_ip:$empire_port/api/agents/$agent_name/download?token=$empire_session_token");
+    curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+    curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json','Content-Length: ' . strlen($data_string),'Except:'));
+    curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+    $result = curl_exec($ch);
+    curl_close($ch);
+    $arr_result = json_decode($result, true);
+    return $arr_result;
+}
+function agent_file_upload($empire_ip, $empire_port, $empire_session_token, $agent_name, $path)
+{
+    $data = array("path" => $path);
+    $data_string = json_encode($data);
+    $ch = curl_init("https://$empire_ip:$empire_port/api/agents/$agent_name/upload?token=$empire_session_token");
     curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
     curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
