@@ -3,26 +3,31 @@
 require_once("includes/check-authorize.php");
 require_once("includes/functions.php");
 
-$listener_count = "0 listeners currently active" ;
+function sanitizeArr($inArr) {
+	$out = array_map("addslashes", $inArr);
+	$out = array_map("htmlentities", $out);
+
+	return $out;
+}
+
 $arr_result = get_all_listeners($sess_ip, $sess_port, $sess_token);
 if(!empty($arr_result))
 {
-    $listener_count = sizeof($arr_result["listeners"]) . " listeners currently active";
+    $listeners = $arr_result["listeners"];
 }
 else
 {
-    $listener_count = "<div class='alert alert-danger'><span class='glyphicon glyphicon-remove'></span> Unexpected response.</div>";
+    $listeners = array();
 }
 
-$agent_count = "0 agents currently active" ;
 $arr_result = get_all_agents($sess_ip, $sess_port, $sess_token);
 if(!empty($arr_result))
 {
-    $agent_count = sizeof($arr_result["agents"]) . " agents currently active";
+    $agents = $arr_result["agents"];
 }
 else
 {
-    $agent_count = "<div class='alert alert-danger'><span class='glyphicon glyphicon-remove'></span> Unexpected response.</div>";
+    $agents = array();
 }
 ?>
 <!DOCTYPE html>
@@ -33,22 +38,56 @@ else
 </head>
 
 <body>
+	<style type="text/css">
+.list-btn {
+    width: 100%;
+    text-align: left;
+    border: 0px;
+    border-radius: 0;
+    background-color: transparent;
+    color: black;
+    font-weight: bold;
+}
+div.agent-interact-body { height: 500px; }
+	</style>
     <div class="container">
         <?php @require_once("includes/navbar.php"); ?>
-        <h1>PowerShell Empire Web</h1>
+        <h1>Eden WebUI</h1>
         <br>
-        <div class="panel-group">
-            <div class="panel panel-primary">
-                <div class="panel-heading">Empire Listeners</div>
-                <div class="panel-body"><code><?php echo $listener_count; ?></code></div>
-            </div>
-            <br>
-            <div class="panel panel-primary">
-                <div class="panel-heading">Empire Agents</div>
-                <div class="panel-body"><code><?php echo $agent_count; ?></code></div>
-            </div>
-        </div>
+	<div class="row">
+		<div class="col-lg-4">
+			<div class="panel-group">
+			    <div class="panel panel-primary">
+				<div class="panel-heading">Listeners</div>
+				<div id="listeners-body" class="panel-body" data-hash="undef">
+					Loading...
+				</div>
+			    </div>
+			    <br>
+			    <div class="panel panel-primary">
+				<div class="panel-heading">Agents</div>
+				<div id="agents-body" class="panel-body" data-hash="undef">
+					Loading...
+				</div>
+			    </div>
+			</div>
+		</div>
+		<div class="col-lg-8">
+			<div class="panel panel-primary">
+				<div class="panel-heading">Interact</div>
+				<div class="panel-body agent-interact-body">
+				</div>
+<script language="javascript">
+var prompt_user = "<?= $_SESSION['empire_user'] ?>";
+var svcs = [<?php foreach($agents as $agent) { echo "'".$agent['name']."', "; } ?>];
+var current_svc = 0;
+var commands;
+</script>
+			</div>
+		</div>
+	</div>
     </div>
+    <script type="text/javascript" src="js/dashboard.js"></script>
     <?php @require_once("includes/footer.php"); ?>
 </body>
 </html>

@@ -4,6 +4,8 @@
 	<meta name="author" content="">
 	<link href="css/bootstrap.min.css" rel="stylesheet">
 	<link href="css/style.css" rel="stylesheet">
+	<link href="css/jquery.contextMenu.css" rel="stylesheet">
+	<link href="css/jquery.terminal.css" rel="stylesheet">
 	<!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
 	<!--[if lt IE 9]>
 		<script src="js/html5shiv.js"></script>
@@ -11,6 +13,10 @@
 	<script type="text/javascript" src="js/jquery.min.js"></script>
 	<script type="text/javascript" src="js/bootstrap.min.js"></script>
 	<script type="text/javascript" src="js/scripts.js"></script>
+	<script type="text/javascript" src="js/jquery.ui.position.js"></script>
+	<script type="text/javascript" src="js/jquery.contextMenu.js"></script>
+	<script type="text/javascript" src="js/jquery.mousewheel-min.js"></script>
+	<script type="text/javascript" src="js/jquery.terminal.js"></script>
     <style type="text/css">
         /* Sticky footer styles
         -------------------------------------------------- */

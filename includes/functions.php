@@ -1,4 +1,9 @@
 <?php
+
+function formatTimestamp($ts_str) {
+    return date("d M Y H:i:s", strtotime($ts_str));
+}
+
 //If you want to proxy data then add this to the function which you want to intercept (update $proxy)
 //$proxy = "http://127.0.0.1:9092/";
 //curl_setopt($ch, CURLOPT_PROXY, $proxy);
@@ -17,6 +22,7 @@ function authenticate_empire($empire_ip, $empire_port, $empire_username, $empire
     curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
     curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
     $result = curl_exec($ch);
+    
     curl_close($ch);
     $arr_result = json_decode($result, true);
     return $arr_result;
